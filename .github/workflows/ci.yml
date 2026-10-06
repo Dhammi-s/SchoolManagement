@@ -1,0 +1,67 @@
+name: Backend CI + Master DB Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore SchoolManagement.slnx
+
+      - name: Build solution (API + libraries)
+        run: dotnet build SchoolManagement.slnx -c Release --no-restore
+
+      - name: Build master DACPAC
+        run: dotnet build MasterDatabase/SchoolManagement-MasterDb.sqlproj -c Release
+
+      - name: Publish API
+        run: dotnet publish src/SchoolManagement.Api/SchoolManagement.Api.csproj -c Release -o artifacts/api
+
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api
+          path: artifacts/api
+
+  deploy-master-db:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    env:
+      MASTER_CONNECTION_STRING: ${{ secrets.MASTER_CONNECTION_STRING }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build master DACPAC
+        run: dotnet build MasterDatabase/SchoolManagement-MasterDb.sqlproj -c Release
+
+      - name: Install SqlPackage
+        run: dotnet tool install -g microsoft.sqlpackage
+
+      - name: Publish master DACPAC
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          $dacpac = Get-ChildItem MasterDatabase/bin/Release -Filter *.dacpac -Recurse | Select-Object -First 1
+          if (-not $dacpac) { throw "Master DACPAC not found." }
+          sqlpackage /Action:Publish /SourceFile:"$($dacpac.FullName)" `
+            /TargetConnectionString:"$env:MASTER_CONNECTION_STRING" /p:BlockOnPossibleDataLoss=true
+          if ($LASTEXITCODE -ne 0) { throw "Master publish failed." }

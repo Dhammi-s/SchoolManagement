@@ -1,0 +1,13 @@
+## .NET
+bin/
+obj/
+artifacts/
+*.user
+.vs/
+
+## Rider / VS
+.idea/
+
+## Local secrets
+appsettings.*.local.json
+*.local.json
