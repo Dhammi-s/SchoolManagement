@@ -65,6 +65,25 @@ public sealed class CreateTeacherResponse
 {
     public int EmployeeId { get; set; }
     public int? UserId { get; set; }
+    /// <summary>Credentials to show the admin on screen (so they can print/hand out).</summary>
+    public string? Username { get; set; }
+    public string? TempPassword { get; set; }
+    public bool LoginEmailed { get; set; }
+}
+
+public sealed class CreateStudentLoginRequest
+{
+    public string? Username { get; set; }
+    public string? Password { get; set; }
+}
+
+public sealed class CreateLoginResult
+{
+    public int UserId { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string TempPassword { get; set; } = string.Empty;
+    public bool Emailed { get; set; }
+    public string? Email { get; set; }
 }
 
 public sealed class AssignInchargeRequest

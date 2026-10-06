@@ -27,3 +27,17 @@ public sealed class TenancyOptions
     /// <summary>Allow a ?tenant= query override (useful for Swagger / local testing).</summary>
     public bool AllowQueryStringOverride { get; set; } = true;
 }
+
+/// <summary>Brevo (Sendinblue) transactional email settings.</summary>
+public sealed class BrevoOptions
+{
+    public const string SectionName = "Brevo";
+
+    /// <summary>Brevo API key (v3). When empty, email sending is disabled (accounts still created).</summary>
+    public string ApiKey { get; set; } = string.Empty;
+    public string SenderName { get; set; } = "School Management";
+    public string SenderEmail { get; set; } = string.Empty;
+
+    /// <summary>Login URL included in the credentials email.</summary>
+    public string LoginUrl { get; set; } = string.Empty;
+}

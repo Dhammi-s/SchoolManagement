@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
         services.Configure<CloudinaryOptions>(configuration.GetSection(CloudinaryOptions.SectionName));
         services.Configure<TenancyOptions>(configuration.GetSection(TenancyOptions.SectionName));
+        services.Configure<BrevoOptions>(configuration.GetSection(BrevoOptions.SectionName));
 
         // Tenancy & data access (scoped: per-request tenant resolution).
         services.AddScoped<ITenantContext, TenantContext>();
@@ -46,6 +47,8 @@ public static class DependencyInjection
         services.AddSingleton<IMediaStorage, CloudinaryService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITeacherService, TeacherService>();
+        services.AddScoped<IStudentAccountService, StudentAccountService>();
+        services.AddHttpClient<IEmailSender, Email.BrevoEmailSender>();
 
         return services;
     }

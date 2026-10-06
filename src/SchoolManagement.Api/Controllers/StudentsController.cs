@@ -16,15 +16,28 @@ public sealed class StudentsController : ControllerBase
     private readonly IStudentRepository _students;
     private readonly IStudentInterestRepository _interests;
     private readonly IStudentDocumentRepository _documents;
+    private readonly IStudentAccountService _accounts;
 
     public StudentsController(
         IStudentRepository students,
         IStudentInterestRepository interests,
-        IStudentDocumentRepository documents)
+        IStudentDocumentRepository documents,
+        IStudentAccountService accounts)
     {
         _students = students;
         _interests = interests;
         _documents = documents;
+        _accounts = accounts;
+    }
+
+    /// <summary>Create a login account for a student and email the credentials (if an email is on file).</summary>
+    [HttpPost("{id:int}/login")]
+    [Authorize(Roles = ManageRoles)]
+    [ProducesResponseType(typeof(CreateLoginResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CreateLogin(int id, [FromBody] CreateStudentLoginRequest request, CancellationToken ct)
+    {
+        var result = await _accounts.CreateLoginAsync(id, request.Username, request.Password, ct);
+        return Ok(result);
     }
 
     /// <summary>List students, optionally filtered by class or a search term.</summary>

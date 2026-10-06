@@ -48,6 +48,7 @@ public sealed class StudentRepository : IStudentRepository
         p.Add("@SectionId", r.SectionId);
         p.Add("@RollNumber", r.RollNumber);
         p.Add("@Address", r.Address);
+        p.Add("@Email", r.Email);
         p.Add("@GuardianName", r.GuardianName);
         p.Add("@GuardianPhone", r.GuardianPhone);
         p.Add("@PreviousSchoolName", r.PreviousSchoolName);

@@ -35,6 +35,7 @@ public sealed class StudentDetailDto
     public string? SectionName { get; set; }
     public string? RollNumber { get; set; }
     public string? Address { get; set; }
+    public string? Email { get; set; }
     public string? GuardianName { get; set; }
     public string? GuardianPhone { get; set; }
     public string? PreviousSchoolName { get; set; }
@@ -65,6 +66,7 @@ public sealed class CreateStudentRequest
     public int? SectionId { get; set; }
     public string? RollNumber { get; set; }
     public string? Address { get; set; }
+    public string? Email { get; set; }
     public string? GuardianName { get; set; }
     public string? GuardianPhone { get; set; }
     public string? PreviousSchoolName { get; set; }
