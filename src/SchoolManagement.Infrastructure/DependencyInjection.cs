@@ -34,6 +34,11 @@ public static class DependencyInjection
         services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<ITimetableRepository, TimetableRepository>();
         services.AddScoped<IStudentRepository, StudentRepository>();
+        services.AddScoped<IBusRouteRepository, BusRouteRepository>();
+        services.AddScoped<IStudentInterestRepository, StudentInterestRepository>();
+        services.AddScoped<IStudentDocumentRepository, StudentDocumentRepository>();
+        services.AddScoped<IFeeRepository, FeeRepository>();
+        services.AddScoped<IPerformanceRepository, PerformanceRepository>();
 
         // Services.
         services.AddSingleton<IPasswordHasher, PasswordHasher>();

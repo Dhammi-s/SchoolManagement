@@ -45,4 +45,12 @@ public sealed class EmployeeRepository : IEmployeeRepository
         await conn.ExecuteAsync(new CommandDefinition("dbo.usp_Employee_Insert", p, commandType: CommandType.StoredProcedure, cancellationToken: ct));
         return p.Get<int>("@NewId");
     }
+
+    public async Task SetPhotoAsync(int employeeId, string photoUrl, CancellationToken ct = default)
+    {
+        using var conn = await _connectionFactory.CreateTenantConnectionAsync(ct);
+        await conn.ExecuteAsync(new CommandDefinition(
+            "dbo.usp_Employee_SetPhoto", new { EmployeeId = employeeId, PhotoUrl = photoUrl },
+            commandType: CommandType.StoredProcedure, cancellationToken: ct));
+    }
 }

@@ -43,4 +43,14 @@ public sealed class TeachersController : ControllerBase
     [ProducesResponseType(typeof(IReadOnlyList<TimetablePeriodDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Schedule(int id, CancellationToken ct)
         => Ok(await _timetable.GetByTeacherAsync(id, ct));
+
+    /// <summary>Set a staff member's profile photo (Cloudinary URL).</summary>
+    [HttpPut("{id:int}/photo")]
+    [Authorize(Roles = $"{Roles.Principal},{Roles.HeadMaster}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> SetPhoto(int id, [FromBody] SetPhotoRequest request, CancellationToken ct)
+    {
+        await _employees.SetPhotoAsync(id, request.PhotoUrl, ct);
+        return NoContent();
+    }
 }
